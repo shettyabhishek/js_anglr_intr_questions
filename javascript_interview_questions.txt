@@ -1,0 +1,555 @@
+
+Java Script interview questions and points 
+----------------------------------------------------------------------------------------------------------------------------
+1. Based on data type Primitive (number, string, boolean, null, undefined, bigint, symbol)  / Call by value (store single value)
+    => var a = null; var b = undefined; 
+	       a == b would return true, but a === b would return false; 
+	=> Symbol is a built-in object whose constructor returns a symbol . Key word 'new' is not used to create a symbol 
+	const sym1 = Symbol();
+	const sym2 = Symbol("foo");
+	const sym3 = Symbol("foo");
+	Note : sym2 == sym3 // returns false 
+----------------------------------------------------------------------------------------------------------------------------
+2. Data type Non-Primitive (Array & Object) / Call by reference
+----------------------------------------------------------------------------------------------------------------------------
+3. Hoisting : To avoid hoisting, you can run javascript in strict mode by using “use strict” on top of the code
+     In case a variable is used before being declared it will throw an error.
+----------------------------------------------------------------------------------------------------------------------------
+4. Implicit Coercion : Implicit type coercion in javascript is the automatic conversion of value from one data type to another.
+    
+	In case we add using "+" operator a number and a string the result is automatically converted to a string , because the
+	second operand is a string. 
+	E.g.    var x = 3;  var y = "3";
+		x + y // Returns "33" 
+		
+	In case we subtracting using "-" operator a number and a string the result is automatically converted to a number 
+	only if the conversion of the string to number would yeild a number 
+	E.g var x = 33; var y = '12';
+		x - y //Returns 21
+	But considering the above mentioned condition 
+	E.g. var x = 33; var y ='Test';
+		x-y // Returns NaN (not a number) 
+
+    Logical operators 
+		OR ( | | ) operator - If the first value is truthy, then the first value is returned. Otherwise, always the second value gets returned.
+		AND ( && ) operator - If both the values are truthy, always the second value is returned. If the first value is falsy then 
+			the first value is returned or if the second value is falsy then the second value is returned.
+		Note : All values except false, 0, 0n, -0,"", null, undefined, and NaN are truthy values.
+----------------------------------------------------------------------------------------------------------------------------
+5. JavaScript is a dynamically typed language. In a dynamically typed language, the type of a variable is checked during 
+	run-time in contrast to a statically typed language, where the type of a variable is checked during compile-time.
+----------------------------------------------------------------------------------------------------------------------------
+6. Characteristics of strict mode in javascript
+	- Duplicate arguments are not allowed by developers.
+	- In strict mode, you won't be able to use the JavaScript keyword as a parameter or function name.
+	- The 'use strict' keyword is used to define strict mode at the start of the script. Strict mode is supported by all browsers.
+	- Engineers will not be allowed to create global variables in 'Strict Mode.
+-----------------------------------------------------------------------------------------------------------------------------
+7. Explain “this” keyword.
+	this refers to the context where it is being executed. 
+	For e.g 
+	Scenario 1
+	-----------
+	function doSomething() {
+		console.log(this);
+	}
+	The “this” keyword refers to the object that the function is a property of.
+	Since the above function  is property of the window object the 'this' key word would point to the window context 
+	hence pointing to the window object
+	
+	Scenario 2
+	-----------
+	var myObj = {
+		name:  "vivek",
+		getName: function(){
+			console.log(this.name);
+	  }
+	}
+	myObj.getName();
+    In this scenario the getName is the function of the object myObj. So the key word 'this' in this context will point to the 
+	myObj
+	
+	The silly way to understand the “this” keyword is, whenever the function is invoked, check the object before the dot. 
+	The value of this . keyword will always be the object before the dot. If there is no object before the dot , 
+	the value of this keyword will be the global object.
+-----------------------------------------------------------------------------------------------------------------------------
+8. IIFE => Immideately Invoked Function Expressions also referred as anonymous functions 
+-----------------------------------------------------------------------------------------------------------------------------
+9. call(), apply() and, bind() methods.
+	call() => 
+		- This method invokes a method (function) by specifying the owner object.
+		- call() accepts arguments as comma seperated values
+
+		E.g. 
+		
+			function sayHello(){
+			  return "Hello " + this.name;
+			}
+			var obj = {name: 'someName'}
+	        sayHello.call(obj) // Returns "Hello someName"
+			-----------------------------------------------------------------------------
+			var person = {
+				age: 23,
+				getAge: function(){
+					return this.age;
+				}
+			}       
+			var person2 = {age:  54};
+			person.getAge.call(person2) // Returns 54 
+			-----------------------------------------------------------------------------
+			function saySomething(message){
+				return this.name + " is " + message;
+			}     
+			var person4 = {name:  "John"};     
+			saySomething.call(person4, "awesome"); // Returns "John is awesome"    
+			-----------------------------------------------------------------------------
+			
+	apply() => 
+		- this is similar to call method, but it takes parameters as an array
+	
+	bind() => 
+		- This method returns a new function, where the value of “this” keyword will be bound to the owner object, which is provided as a parameter.
+		var bikeDetails = {
+			displayDetails: function(registrationNumber,brandName){
+				return this.name+ " , "+ "bike details: "+ registrationNumber + " , " + brandName;
+			}
+		}   
+		var person1 = {name:  "Vivek"};     
+		var detailsOfPerson1 = bikeDetails.displayDetails.bind(person1, "TS0122", "Bullet"); //Binds the displayDetails function to the person1 object
+		detailsOfPerson1(); //Returns Vivek, bike details: TS0122, Bullet
+		
+	Reference Video : http://youtube.com/watch?v=9eUe1-gLeKs
+-----------------------------------------------------------------------------------------------------------------------------
+10. Currying is a functional programming technique where a function with multiple arguments is transformed into a series 
+		of functions, each taking a single argument. Instead of taking all arguments at once, the curried function takes the 
+		first argument, returns a new function that takes the next argument, and  so on until all arguments are provided. 
+		The final function then returns the result. It helps us to create a higher-order function.  It reduces the chances of error in our 
+		function by dividing it into multiple smaller functions that can handle one responsibility. This does not change the functional 
+		behaviour of the function, just change the way its invoked. 
+		E.g.
+		var myFunc = function calculateVolume(length) {
+			console.log("step1")
+			return function (breadth) {
+				console.log("step2")
+				return function (height) {
+					console.log("step3")
+					return length * breadth * height;
+				}
+			}
+		}
+		myFunc(3)(2)(4) // Returns 24 => order of execution is step1, step2, step3
+-----------------------------------------------------------------------------------------------------------------------------
+11. Scopes in javascript 
+	- Global scope : Variables or functions declared in the global namespace have global scope, which means all the variables and
+		functions having global scope can be accessed from anywhere inside the code.
+	- Function Scope: Any variables or functions declared inside a function have local/function scope, which means that all the 
+		variables and functions declared inside a function, can be accessed from within the function and not outside of it.
+	- Block Scope: Block scope is related to the variables declared using let and const. Variables declared with var do not have 
+		block scope. Block scope tells us that any variable declared inside a block { }, can be accessed only inside that block and cannot be accessed outside of it.
+	- Scope Chain: JavaScript engine also uses Scope to find variables.
+		As you can see in the code above, if the javascript engine does not find the variable in local scope, it tries to check for the variable in 
+		the outer scope. If the variable does not exist in the outer scope, it tries to find the variable in the global scope.
+-----------------------------------------------------------------------------------------------------------------------------
+12. Closures are an ability of a function to remember the variables and functions that are declared in its outer scope
+	This ability of a function to store a variable for further reference even after it is executed is called Closure.
+	function randomFunc(){
+		var obj1 = {name:"Vivian", age:45};
+		return function(){
+			console.log(obj1.name + " is "+ "awesome"); // Has access to obj1 even when the randomFunc function is executed
+		}
+	}
+	var initialiseClosure = randomFunc(); // Returns a function
+	initialiseClosure(); 
+	
+	Closure
+		- Its basically a function defined inside another function
+		- A closure is an inner function that has access to variables and scope of an outer function
+		- A closure can make a variable private and maintain its state 
+		
+	Reference Video : https://www.youtube.com/watch?v=beZfCfiuIkA
+-----------------------------------------------------------------------------------------------------------------------------
+13. A callback is a function that will be executed after another function gets executed. In javascript, functions are treated as first-class citizens, 
+	they can be used as an argument of another function, can be returned by another function, and can be used as a property of an object.
+-----------------------------------------------------------------------------------------------------------------------------
+14. Memoization is a form of caching where the return value of a function is cached based on its parameters.
+	If the parameter of that function is not changed, the cached version of the function is returned.
+	function memoizedAddTo256(){
+		var cache = {};
+		return function(num){
+			if(num in cache){
+				console.log("cached value");
+				return cache[num]
+			}
+			else{
+				cache[num] = num + 256;
+				return cache[num];
+			}
+		}
+	}
+	var memoizedFunc = memoizedAddTo256();
+	memoizedFunc(20); // Normal return
+	memoizedFunc(20); // Cached return
+-----------------------------------------------------------------------------------------------------------------------------
+15. DOM stands for Document Object Model.  DOM is a programming interface for HTML and XML documents. When the browser tries to 
+	render an HTML document, it creates an object based on the HTML document called DOM. Using this DOM, we can manipulate or change 
+	various elements inside the HTML document.
+-----------------------------------------------------------------------------------------------------------------------------
+16. Browser Object Model is known as BOM. It allows users to interact with the browser. A browser's initial object is a window. 
+	As a result, you may call all of the window's functions directly or by referencing the window. The document, history, screen, navigator,
+	location, and other attributes are available in the window object.
+-----------------------------------------------------------------------------------------------------------------------------
+17. Arrow functions were introduced in the ES6 version of javascript. Arrow functions are declared without the function keyword.
+	If there is only one returning expression then we don’t need to use the return keyword as well in an arrow function as shown
+	in the example above. Also, for functions having just one line of code, curly braces { } can be omitted.
+	var multiplyBy2 = function(num){
+	  return num * 2;
+	}
+	// Arrow function expression
+	var arrowMultiplyBy2 = num => num * 2;
+-----------------------------------------------------------------------------------------------------------------------------
+18. Rest Parameters : Using the rest parameter syntax, we can create functions that can take a variable number of arguments.
+	Rest parameter should always be used at the last parameter of a function:
+
+	function extractingArgs(...args){
+	  return args[1];
+	}
+	extractingArgs(8,9,1); // Returns 9
+-----------------------------------------------------------------------------------------------------------------------------
+19. Spread operator : Syntax similar to rest operator. But, its used to spreading an array, and object literals.
+	let array1 = [3, 4, 5, 6];
+	let clonedArray1 = [...array1];
+	// Spreads the array into 3,4,5,6
+	console.log(clonedArray1); // Outputs [3,4,5,6]
+
+	let obj1 = {x:'Hello', y:'Bye'};
+	let obj2 = {z:'Yes', a:'No'};
+	let mergedObj = {...obj1, ...obj2}; // Spreads both the objects and merges it
+	console.log(mergedObj); // Outputs {x:'Hello', y:'Bye',z:'Yes',a:'No'};
+-----------------------------------------------------------------------------------------------------------------------------
+20. Promises are used to handle asynchronous operations in javascript. Promise object has four states -
+	Pending - Initial state of promise. This state represents that the promise has neither been fulfilled nor been rejected, it is in the pending state.
+	Fulfilled - This state represents that the promise has been fulfilled, meaning the async operation is completed.
+	Rejected - This state represents that the promise has been rejected for some reason, meaning the async operation has failed.
+	Settled - This state represents that the promise has been either rejected or fulfilled.
+	A promise is created using the Promise constructor which takes in a callback function with two parameters, resolve and reject respectively.
+
+	function sumOfThreeElements(...elements){
+		return new Promise((resolve,reject)=>{
+			if(elements.length > 3 ){
+				reject("Only three elements or less are allowed");
+			} else{
+				let sum = 0;
+				let i = 0;
+				while(i < elements.length){
+					sum += elements[i];
+					i++;
+				}
+				resolve("Sum has been calculated: "+sum);
+			}
+		})
+	}
+	
+	const myPromise = sumOfThreeElements(2,3,5);		
+	myPromise.then((success) => {console.log(success)});
+	myPromise.catch((error) => {console.log(error)});
+-----------------------------------------------------------------------------------------------------------------------------
+21. Generator functions: They can be stopped midway and then continue from where they had stopped.
+	Generator functions are declared with the function* keyword. In the case of generator functions, when called, 
+	they do not execute the code, instead, they return a generator object. This generator object handles the execution.
+	The generator object consists of a method called next(), this method when called, executes the code 
+	until the nearest yield statement, and returns the yield value.
+	
+	function* genFunc(){
+	  yield 3;
+	  yield 4;
+	}
+	genFunc().next(); // Returns {value: 3, done:false}
+	Value property represents the yielded value. Done property tells us whether the function code is finished or not. 
+	(Returns true if finished).
+-----------------------------------------------------------------------------------------------------------------------------
+22. Weakset : Has only objects, and does not support any other type. This has only 3 methods add, delete & has	
+	const newSet2 = new WeakSet([3, 4, 5]); //Throws an error
+	let obj1 = {message:"Hello world"};
+	const newSet3 = new WeakSet([obj1]);
+	console.log(newSet3.has(obj1)); // true
+-----------------------------------------------------------------------------------------------------------------------------
+23. Weakmap : Has only objects as keys and objects as values and does not support any other type. 
+	let obj = {name:"Vivek"};
+	const map3 = new WeakMap();
+	map3.set(obj, {age:23});
+-----------------------------------------------------------------------------------------------------------------------------
+24. Object destructuring is a new way to extract elements from an object or an array.
+	const classDetails = {
+	  strength: 78,
+	  benches: 39,
+	  blackBoard:1
+	}
+	const {strength:classStrength, benches:classBenches,blackBoard:classBlackBoard} = classDetails;	
+	console.log(classStrength); // Outputs 78
+	console.log(classBenches); // Outputs 39
+	console.log(classBlackBoard); // Outputs 1
+	
+	in case you are creating variables of same name as the property then the code can be shortened 
+	const {strength} = classDetails;
+	console.log(strength); // Outputs 78
+-----------------------------------------------------------------------------------------------------------------------------
+25. Temporal Dead Zone - trying to access variables that have not been declared yet.
+	x = 23; // Gives reference error
+	let x;
+	function anotherRandomFunc(){
+		message = "Hello"; // Throws a reference error
+		let message;
+	}
+-----------------------------------------------------------------------------------------------------------------------------
+26. The defer attribute is a boolean attribute. If the defer attribute is set, it specifies that the script is downloaded 
+	in parallel to parsing the page, and executed after the page has finished parsing. The defer attribute is only for 
+	external scripts (should only be used if the src attribute is present).
+	-	If async is present: The script is downloaded in parallel to parsing the page, and executed as soon as it is available (before parsing completes)
+	-	If defer is present (and not async): The script is downloaded in parallel to parsing the page, and executed after the page has finished parsing
+	-	If neither async or defer is present: The script is downloaded and executed immediately, blocking parsing until the script is completed
+	<script defer src="data:text/javascript,console.log('inline defer')"></script>
+-----------------------------------------------------------------------------------------------------------------------------
+27. Document. cookies store a list of key and value pairs seperated by a semi colon. To fetch all of them use "documet.cookie". And then to 
+	split them using ";" to get all the the key value pairs.
+	Deleting a cookie - You should define the path on which the cookie exists to ensure that you are deleting the correct cookie also set 
+	expiration date to a date of the past. E.g.
+	document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+	
+	creating cookie => document.cookie = "somecookied='testme'";
+	//Using jQuery plugin 
+		Set cookie 1 : $.cookie('the_cookie', 'the_value');
+		Set cookie 2 : $.cookie('the_cookie', 'the_value', { expires: 7 });
+		Get cookie : $.cookie('the_cookie');
+		Delete cookie : $.removeCookie('the_cookie');
+-----------------------------------------------------------------------------------------------------------------------------
+28. Localstorage : stores data object. It remains even when the tab is closed unless its explicitly removed. Its capacity is max 5 to 10MB
+	Supported by all browsers 
+	Session storage : data gets cleared when session ends
+		
+-----------------------------------------------------------------------------------------------------------------------------
+29. Cross site scripting 
+	sanatize or sanatize-html - npm 
+	
+	Reference video :  https://www.youtube.com/watch?v=oEFPFc36weY
+	Reference video : 	 https://www.youtube.com/watch?v=9inczw6qtpY\
+-----------------------------------------------------------------------------------------------------------------------------
+30. Weakmap and map differences 
+	
+	Reference Video : https://www.youtube.com/watch?v=iSt5iLwqtdI
+-----------------------------------------------------------------------------------------------------------------------------
+31. Event loop and callstack 
+		Callstack - LIFO 
+		Event Queue - This is for all asynchronous calls , FIFO mechanism 
+		Event loop checks the event queue and as soon callstack is free, it pushes the function result to call stack for executing 
+			- Task queue for set time out 
+			- Micro task queue for promises 	
+
+	Reference Video : https://www.youtube.com/watch?v=eiC58R16hb8
+-----------------------------------------------------------------------------------------------------------------------------
+32. Deep and Shallow copy 
+	Refernce Video : https://www.youtube.com/watch?v=duyshh9Fs1U
+
+-----------------------------------------------------------------------------------------------------------------------------
+33. Generics 
+	Sample 	
+	const getFirstElement = function<T>(arr: T[]): T{
+		return arr[0];
+	}
+	const num = getFirstElement([1,2,3,4,5,6]);
+	console.log(num);
+	const str = getFirstElement(['Hi','How','Are','You']);
+	console.log(str);
+	
+	Refernce Video : https://www.youtube.com/watch?v=EcCTIExsqmI
+
+-----------------------------------------------------------------------------------------------------------------------------
+34. Creating Tupple 
+	
+	- creating a variable / constant that can hold values of different type. 
+		E.g. const tupl:[number, string, boolean] = [111,'Test',true];
+	- The problem with tuples is considering the above scenario, the array should not have more than 3 elements. But, since its an array 
+	all the array functions still work like pop, push, slice and so on
+	
+	Reference video : https://www.youtube.com/watch?app=desktop&v=ulouRaA0tHc
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Javascript & JQuery & ES6
+-------------------
+1. What is difference between alert and window.alert
+2. can we override alert 
+3. example of closure 
+4. call & apply
+	theFunction.apply(valueForThis, arrayOfArgs)
+	theFunction.call(valueForThis, arg1, arg2, ...)
+	theFunction("John", "fireman");
+	theFunction.apply(undefined, ["Susan", "school teacher"]);	
+	theFunction.call(undefined, "Claude", "mathematician");
+	theFunction.call(undefined, ...["Matthew", "physicist"]); // used with the spread operator
+5. hoisting
+6. what type of scoping javascript uses - function / block
+7. let , const, var 
+	i) Does let & const key word hoist the variable declartion
+    ii) 
+	var a = 1, b = 2;
+    if(a===1){
+	   var a = 10;
+	   let b = 11;
+	   console.log(a , b);
+	}
+	console.log(a , b); 
+	
+	Ans: 10, 11   & 10, 2
+	
+	iii)
+	for(var i=0 ;i > 5;i++){
+	  setTimeout(function(){
+		console.log(i);
+	  },1000);
+	}
+	
+	Ans: 6 , avoid it by using let
+	
+	iv) Arrow function example
+	var employee = {
+		id: 1,
+		greet: function() {
+			setTimeout(function() {
+				console.log(this.id)
+			}
+		}
+	}
+	console.log(employee.greet);
+	Ans: undefined //change function to arrow function inside setTimeout
+	
+ 
+9. how to create a class in vanilla js 
+10. how to create a private function in Javascript 
+11. what is jquery 
+12. Spread operator & De-structuring	
+	1. Destructuring array 
+		let employee = [ 'john', 'micheal', 'M' ]
+		=> let [fname, lname, gender] = employee
+		=> let [,,gender] = employee
+		=> let [fname, lname, gender="F"]  // gender defaulted 
+		=> let [fname, ...elements]     //console => john, ['micheal' ,'M']
+	2. Descturcturing object
+		let employee = { 'fname': 'john', 'lname': 'micheal', 'gender': 'M'}
+		=> let {fname} = employee  //to get only fname
+		=> let {fname: f, lname: l, gender: g} // alliasing - once done then the actual keys cannot be used for refering the values
+		`	
+13. arrow function example 
+14. optional parameter in constructor / method
+15.  String literal
+    const eventName: "click" | "mouseover" = "click";
+    // Error: Type 'string' is not assignable to type '"click" | "mouseover"'. Type 'string' is not assignable to type '"mouseover"'.	
+    const event: string = "something entirely different";
+    const eventType: "click" | "mouseover" = event;	
+16. IIFE
+17. What is a rest operator [...elements]
+18. String templates 
+	let str = "Abhishek" 
+	let newStr = `My name is ${str}' 
+	multi line strings + we can avoid concatenation just use ${some var} + space becomes significant
+19. Difference between of and in (for loops)
+	let emploees = ['Test1','Test2','Test3']
+	for( let index in employees) { console.log(employees[index]) }
+	for( let employee of employees) { console.log(employee) }
+	let myStr = 'ABC'
+	for( let char of myStr) { console.log(char)  }  // A B C
+20 Difference between a class & function 
+	classes are not hoisted
+21 Set and Map
+ let newSet = new Set([1,2,3,4,4,4,4,])
+		console.log(newSet.side())
+		
+	let newSet = new Set([1,2,3,4,4,4,4,])
+		console.log(newSet.side())
+	
+	let newMap = new Map();
+	newMap.set("fName","Raj");
+	newMap.set("age",34);
+	newMap.get("age"); // retutns 34
+	newMap.size; //property returns 2 
+	newMap.delete("age") // deletes the age property 
+	
+	let myMap = new Map([
+		["fName", "Robin"],
+		["lName", "Hood"]
+	])
+	//Getting key values
+	for(let [key,value] of myMao.entries()){
+		console.log(`${key}` - `${value}`)
+	}
+	//getting only keys 
+	myMap.keys()
+	
+	//getting only values 
+	myMap.values()
+	
+22. Symbols - purpose to generate a unique id, which is not accessible
+    const fname = Symbol("FirstName");
+	let person = { 
+		[fname]: "Chandler"
+	}
+	//To get the key Object.getOwnPropertySymbols(person)
+	.
+23. generators 
+	Are special functions capable of stopping and resuming execution using a special keyword called yeild 
+	What is it used for => helps in creating a custom iterator say for iterating an object in a simple way (simple implementation)
+	function *createGenerator(){
+		yeild 1;
+		console.log("After the 1st yeild");
+		yeild 2;
+	}
+	let myGen = createGenerator();
+	console.log(myGen.next());
+	console.log(myGen.next());
+	console.log(myGen.next());
+	
+	//Results of the above execution 
+	Object { value: 1, done: false }
+	After the 1st yeild
+	Object { value: 2, done: false }
+	Object { value: undefined, done: true }
+
+24. whats the !! exclamation sign in Javascript? 
+	It basically confirms a falsey or truthy value. E.g. Considering the values below, 
+	when double exclamation is used would confirmed return a boolean value of false
+	- empty string: ""
+	- 0
+	- null
+	- undefined 
+	- NaN
+	
+25. A function without a name -> Anonymous function 
+	E.g. const callMe = function () { console.log("I was called") ;}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+		
+
+
+   
