@@ -1,4 +1,4 @@
-Angular Project Configurations 
+Angular Project Configurations      
 --------------------------------------------------------------------------------------------------------------------------------
 1. Run the below commands (ESlint)
 	- ng add @angular-eslint/schematics
