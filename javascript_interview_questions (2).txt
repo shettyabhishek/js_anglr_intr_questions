@@ -1,0 +1,201 @@
+//Implementing JS / TS samples 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 1 - Count the number of unique fruits in the list 
+let fruits = ["apple", "banana", "orange", "grape","banana", "orange","banana", "orange","pineapple","avacado","apple","avacado"];
+const countUniqueFruits = function(){
+    let newAr = fruits.reduce((result:any,item:string) =>{
+        if(!result[item])
+            result[item] = 1;
+        else 
+            result[item] = result[item] + 1;
+        return result 
+    },{})
+    return newAr
+}
+console.log("All data - ",countUniqueFruits());
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 2 - Capitalize the first char in the string 
+let capitalizeStr = "festive season boosts gig work demand"
+const captlzFrstChar = function(){
+    const allWords = capitalizeStr.split(" ");
+    let newString = allWords.map((str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1,str.length)
+    }).join(" ")
+    return newString
+}
+console.log("Capitlaized string ",captlzFrstChar());
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 3 - Check if string is pallindrom
+let pallindromStr = "kannada";
+const checkPallindrom = function(){
+    const newStr = [...pallindromStr.toLowerCase()].reverse().join("")
+    return pallindromStr.toLowerCase() === newStr ?  true :  false;
+}
+console.log("Check Pallindrom for "+pallindromStr+" - ",checkPallindrom())
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 4 - Check if string is anagram
+let anagramStr1 = "listen";
+let anagramStr2 = "silent"
+const checkAnagram = function():boolean{
+    if(anagramStr1.length !== anagramStr2.length) return false;
+    else{
+        return [...anagramStr1].sort().join("") ===  [...anagramStr2].sort().join("") ? true : false
+    }
+}
+console.log("Check if Anagram "+anagramStr1+" - "+anagramStr2+" : "+checkAnagram())
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 5 - Create a fibonacci series for the input number
+const fibonacciSeries = function(num: number):number[]{
+    let result: number[] = []
+    if(num == 1) {
+        result.push(0);
+        result.push(1);
+    }
+    if(num > 1){
+        result.push(0);
+        result.push(1);
+        for(let i=2 ;i<num ;i++){
+            let fib1 = result[i-1];
+            let fib2 = result[i-2];
+            result.push(fib1+fib2);
+        }
+    } 
+    console.log(result)
+    return result;
+}
+fibonacciSeries(2)
+fibonacciSeries(3)
+fibonacciSeries(5)
+fibonacciSeries(8)
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 5 - Convert a string number to integer 
+var num:any = "638171";
+console.log(typeof(num - 0))
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 5 - Find all special chars in a string
+var splChrInStr = "AwUK4NgeKjFhYAjFkZYA@wgH#Ar%iizI^AFlMQrwAI%$%1gAnLEoBmWN*^agCOKqW!aMrUylAAb--+K5Xx0gADs0gaaqOumpa4yBkQlHMC";
+const findSplChars = function(): {charType: string, count: number}[]{
+    let splCharObj:{charType: string, count: number}[] = [];
+    let allChars = [...splChrInStr];
+    let tempArray:string[] = []
+    allChars.forEach((eachChr:any) => {
+        if(!(eachChr >= "a" && eachChr <= "z") && !(eachChr >= "A" && eachChr <= "Z")){
+            //check if number 
+            if(isNaN(parseInt(eachChr))){
+                tempArray.push(eachChr)
+            }
+        }
+    })
+    splCharObj = tempArray.reduce((res:any,item:string)=>{
+        if(!res[item]) res[item] = 1;
+        else res[item] = res[item] + 1;
+        return res
+    },{});
+    return splCharObj;
+}
+console.log("Special chars and its count ",findSplChars());
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 6 - Destructuring related question
+let company =  {
+    compNam: "Tech Solutions Inc.",
+    comploc: "Silicon Valley",
+    departments:{
+        depName: "Engineering",
+        "hod" : "Mr Test User"
+    }
+}
+const {compNam,comploc,departments:{depName}} = company
+console.log("check - ",compNam, depName)
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 7 - Deep and shallow copy 
+let a = {name: "Test", age: 30}
+let b = a;
+let c = {...a}
+let d = JSON.parse(JSON.stringify(a)) // creating a new copy
+b.name = "New test"
+console.log("The object a gets updated - call by reference ",a);
+b.name = "New test"
+console.log("Creating a new object from a",c);
+console.log("Deep copy of a is d ",d);
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 8 - Closure sample 
+function outer(){
+    let count = 0;
+    return function inner(){
+        count++;
+        return count;
+    }
+}
+const myClosure = outer()
+console.log("First ",myClosure())
+console.log("Second ",myClosure())
+console.log("Thi ",myClosure())
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 9 - Closure sample with Memoization
+function calculate(){
+    let cache:any = {}
+    return function prodVal(num: number){
+        if(!cache[num]){
+            cache[num] = num * num;
+            console.log("Calculating newly for - ",num);
+        } else {
+            console.log("Returning from cache for - ",num);
+        }
+        return cache[num]
+    }
+}
+const myResult = calculate();
+console.log(myResult(235445));
+console.log(myResult(17));
+console.log(myResult(987));
+console.log(myResult(235445));
+console.log(myResult(17));
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 10 - Currying sample 
+const sayThis = function (a:any){
+    return function(b: any){
+        if(!b) return a;
+        return sayThis(a+b);
+    }
+}
+console.log(sayThis("I ")("am ")("Abhishek ")(".How you ")("today?")())
+
+const sayThisAgain = function(a: string){
+    return function(b: string){
+        return function(c: string){
+            return a+b+c;
+        }
+    }
+}
+console.log(sayThisAgain("how ")("are ")("you?"));
+
+const sayAgain = (a:string) => {
+    return (b:string) => {
+        return (c:string) => {
+            return a+b+c;
+        }
+    }
+}
+console.log(sayAgain("Arrow way -> how ")("are ")("you?"));
+
+const sayAng = (a:string) => (b:string) => (c:string) => a+b+c;
+console.log(sayAgain("Arrow way (very short) -> how ")("are ")("you?"));
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 11 - Array function (min and max) 
+const givenArray = [1,45,2,6,67,8723,12,83,9,42,71]
+console.log("max value in the array ",Math.max(...givenArray));
+console.log("min value in the array ",Math.min(...givenArray));
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Sample 12 - Difference between let and var
+for(var i=0;i<5;i++){
+    setTimeout(()=>{
+        console.log("when i is defined a var  - ",i)
+    },100)
+}
+
+for(let i=0;i<5;i++){
+    setTimeout(()=>{
+        console.log("when i is defined a let  - ",i)
+    },100)
+}
+

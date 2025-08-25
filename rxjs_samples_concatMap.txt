@@ -1,0 +1,68 @@
+import {
+  concatMap,
+  Observable,
+  of,
+  } from 'rxjs';
+
+//Sample 1 - Use of concatMap operator to fetch data of a series of values and emit it.
+//Consider a scenario where the information of a series of items have to be found and emitted, in this scenario the concatMap takes one id at a time fetches data, it waits for the observable before the next id can be used to fetch its data. This propcess continues till all the data for the ids are fetched and emits the complete data as an observable
+
+class MyService {
+  allIdData: { id: number; productName: string; price: number }[] = [];
+  constructor() {
+    //Add logic if required
+    this.allIdData = [
+      {
+        id: 1,
+        productName: 'Laptop',
+        price: 1200.0,
+      },
+      {
+        id: 2,
+        productName: 'Mouse',
+        price: 25.5,
+      },
+      {
+        id: 3,
+        productName: 'Keyboard',
+        price: 75.0,
+      },
+      {
+        id: 4,
+        productName: 'Desktop',
+        price: 17.0,
+      },
+      {
+        id: 5,
+        productName: 'CPU',
+        price: 27.95,
+      },
+      {
+        id: 6,
+        productName: 'Graphics Card',
+        price: 95.0,
+      },
+      {
+        id: 7,
+        productName: 'Speakers',
+        price: 15.0,
+      },
+    ];
+  }
+  getInfoFromId(
+    id: number
+  ): Observable<{ id: number; productName: string; price: number } | undefined> {
+    return of(this.allIdData.find((item) => item.id === id));
+  }
+}
+
+const myServ = new MyService();
+const idsToFetch:Observable<number> = of(1,4,6,7);
+const idDatas:Observable<any> = idsToFetch.pipe(
+  concatMap(
+    ids => {
+      return myServ.getInfoFromId(ids);
+    }
+  )
+)
+idDatas.subscribe(res => console.log(res));

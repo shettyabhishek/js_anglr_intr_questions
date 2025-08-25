@@ -1,0 +1,23 @@
+
+Shallow and deep copy 
+	- use of spread operator (shallow)
+	- JSON.stringify (deep)
+	- check for loadash library methods 
+	Reference video 
+		- https://www.youtube.com/watch?v=N45KWrxmn2k
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Currying and Closure 
+	Reference video
+		- https://www.youtube.com/watch?v=beZfCfiuIkA  (Closure)
+		- https://www.youtube.com/watch?v=k5TC9i5HonI&t=806s  (Currying)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Event Loop 
+	- Callstack 
+	- Queue 
+		- Web Api 
+			- Task Queue 
+        - Micro Task queue
+    Always the micro task queue that handles promises are the once that get higher priority then the task queue items 
+    - Even Loop - tracks the call stack for being empty and assigns a task to it 	
+	Reference video 
+		-https://www.youtube.com/watch?v=eiC58R16hb8

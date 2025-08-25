@@ -1,0 +1,15 @@
+//Implementing samples to understand event loop execution
+console.log("Print A");
+Promise.resolve('something').then(res => {
+    console.log("Print B")
+    setTimeout(()=>{
+        console.log("Print D")
+        Promise.resolve('something').then(res => {
+            console.log("Print E")
+        })
+    },1000)
+})
+setTimeout(()=>{
+    console.log("Print F")
+},1000)
+console.log("Print C");

@@ -1,0 +1,219 @@
+import {
+  concat,
+  forkJoin,
+  from,
+  fromEvent,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  take,
+  takeLast,
+  takeUntil,
+  takeWhile,
+  tap,
+} from 'rxjs';
+
+//---------------------------------------------------------------------------------------
+//Sample1 - Basic usages of creational RxJs operators (of & from)
+//Converting an array into an observable
+let obs: Observable<any>;
+obs = of([1, 2, 3, 4, 5, 6]);
+obs.subscribe((i) => console.log(i));
+
+//Creating a Person object
+interface Person {
+  name: string;
+  age: number;
+}
+let p1: Person = {
+  name: 'Some name',
+  age: 23,
+};
+//Creating an observable of type Person
+let obs1: Observable<Person> = of(p1);
+obs1.subscribe((p1) => console.log('Person info ', p1));
+
+//Converting a promise into an observable using from
+let prm1 = new Promise((resolve, reject) => {
+  resolve(p1);
+});
+let obs2: Observable<any> = from(prm1);
+obs2.subscribe((p2) =>
+  console.log('Promise converted to observable and subscribted ', p2)
+);
+
+//---------------------------------------------------------------------------------------
+//Sample 2 - Use of pipe function ensures that the observable can be run thru a set of pipe function provided by RxJS.
+//Tap function only facilitates a way to read the content of the observable
+//no modification can be done in tap call back . You can do activities like starting or ending a loader
+let obs3: Observable<any> = of([1, 2, 3, 4, 5]);
+let loader: boolean = false;
+console.log('Loader is false');
+obs3
+  .pipe(
+    tap((res: number) => {
+      loader = true;
+      console.log('Loader is set to true inside the tap call back');
+      //initiate some thing like a loader function
+    })
+  )
+  .subscribe((res: number) =>
+    console.log('Reading the content using the tap function ', res)
+  );
+//---------------------------------------------------------------------------------------
+//Sample 3 - Use of map function to modify the observable
+let obs4: Observable<any> = of(
+  'apple',
+  'banana',
+  'orange',
+  'grape',
+  'banana',
+  'orange',
+  'banana',
+  'orange',
+  'pineapple',
+  'avacado',
+  'apple',
+  'avacado'
+);
+obs4
+  .pipe(
+    map((fruit: string, indx) => {
+      return {
+        [`${indx + 1}`]: fruit,
+      };
+    })
+  )
+  .subscribe((res) => console.log(res));
+//---------------------------------------------------------------------------------------
+//Sample 3 - Use of switch function to cancel the previous request and assign a new one.
+//This would be best helpful in scenarios like a auto complete search scenario.
+let obs5: Observable<any> = of({
+  name: 'Test One',
+  age: 34,
+  company: 'some comp one',
+});
+let obs6: Observable<any> = of({
+  name: 'Test Two',
+  age: 38,
+  company: 'some comp two',
+});
+obs5
+  .pipe(
+    switchMap((ob) => {
+      return obs6;
+    })
+  )
+  .subscribe((res) => console.log('Observable switched using switchMap ', res));
+//Incase of auto complete there is a combination of rxjs operators that are used to get
+//better performance and psuedo code looks like below
+/** 
+    this.searchCompName.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(
+        (text) => {
+          return this.apiService.getMatchingNames(text)
+        }
+      )
+    )
+*/
+//---------------------------------------------------------------------------------------
+//Sample 3 - Use of take and its variations
+let obs7: Observable<any> = fromEvent(document, 'click');
+obs7.subscribe((click) =>
+  console.log('click working as expected on click of browser')
+);
+//Taking the first 2 values, in this case the first 2 clicks using take operator
+obs7
+  .pipe(take(2))
+  .subscribe((cl1) =>
+    console.log('######taking only the first 2 clicks######')
+  );
+let counter = 0;
+//Taking the values while a certain condition is met in this counter value reaching 3.
+//using the takeWhile operator
+obs7.pipe(takeWhile(() => counter < 3)).subscribe((res) => {
+  console.log(
+    '&&&&&&&&&& taking only till counter is less than  3. Current value &&&&&&&&&&-',
+    `${counter}`
+  );
+  counter++;
+});
+//Taking the values of click until and external event stops the event
+//using the takeUntil operator
+let stop$ = new Subject();
+setTimeout(() => {
+  console.log(
+    ' %%%%%%%%%  The timer is complete after 10 seconds and a value emitted using subject to notify the completion %%%%%%%%%%%'
+  );
+  stop$.next('stop');
+  stop$.unsubscribe();
+}, 10000);
+obs7.pipe(takeUntil(stop$)).subscribe((res) => {
+  console.log(
+    'The event will not be available once event to stop the click subscription is triggered'
+  );
+});
+//Taking the last 2 values say from the list of data in the obvervable
+//using the takeLast2 operator
+let obs8: Observable<number> = of(1, 2, 3, 4, 5);
+obs8.pipe(takeLast(2)).subscribe((items) => {
+  console.log('The last 2 values ', items);
+});
+//---------------------------------------------------------------------------------------
+//Sample 4 - Use of mergemap operator to merge 2 different observables
+//to get a new set of data as an observable
+let obs9: Observable<{ color: string; type: string; class: string }> = of({
+  color: 'red',
+  type: 'hatch-back',
+  class: 'E',
+});
+let obs10: Observable<{ name: string; model: number; registration: string }> =
+  of({ name: 'Altrox', model: 2021, registration: 'Bangalore' });
+interface Car {
+  color: string;
+  type: string;
+  class: string;
+  name: string;
+  model: number;
+  registration: string;
+}
+let carObs: Observable<Car> = obs9.pipe(
+  mergeMap((carType) => {
+    return obs10.pipe(
+      map((carModel) => {
+        return {
+          color: carType.color,
+          type: carType.type,
+          class: carType.class,
+          name: carModel.name,
+          model: carModel.model,
+          registration: carModel.registration,
+        };
+      })
+    );
+  })
+);
+carObs.subscribe((carInfo) =>
+  console.log('############# car info #############', carInfo)
+);
+//---------------------------------------------------------------------------------------
+//Sample 5 - Use of concat operator to concat 2 different observables
+//But on concat the 2 obvservable gets concated and 2 values get emitted
+let obs11: Observable<any> = concat(obs9, obs10);
+obs11.subscribe((combinedInfo) =>
+  console.log(' Concated 2 observables ', combinedInfo)
+);
+console.log(
+  '############# There are x number of values emitted where "x" is the number of observers being concated #############'
+);
+//---------------------------------------------------------------------------------------
+//Sample 6 - Use of forkJoin operator to combine multiple different observables
+//and emit it as a single observable
+let obs12: Observable<{warranty: number,serviceDate: string,deliveryDate: string}> = of({warranty: 3,serviceDate: '02/12/2021',deliveryDate: '02/09/2021'})
+let forkedData: Observable<any> = forkJoin(obs9,obs10,obs12);
+forkedData.subscribe(allData => console.log("All forked data ",allData))

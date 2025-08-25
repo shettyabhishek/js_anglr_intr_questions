@@ -1,0 +1,23 @@
+//Handling promises 
+//Sample 1 ---------------------------------------------------------------------------------------------------------------------
+Promise.resolve(100).then((x)=> x+1).then((y) => console.log(y+11));
+
+//Sample 2 ---------------------------------------------------------------------------------------------------------------------
+const prm1 = new Promise((resolve, reject) => {
+    resolve("This is the first promise");
+})
+const prm2 = new Promise((resolve, reject) => {
+    resolve("This is the second promise");
+})
+const prm3 = new Promise((resolve, reject) => {
+    reject("This is the first reject");
+})
+const prm4 = new Promise((resolve, reject) => {
+    resolve("This is the third promise");
+})
+Promise.all([prm1,prm2,prm3,prm3]).then((res) => {
+    console.log("Handling all promise success scenario at one shot"); 
+}).catch((err) => {
+    console.log("Handling all errors. If there is one promise failing then everything fails");
+});
+

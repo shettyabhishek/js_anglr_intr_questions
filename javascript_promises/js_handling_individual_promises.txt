@@ -1,0 +1,31 @@
+//Sample 3 ---------------------------------------------------------------------------------------------------------------------
+const prmOne = new Promise((resolve, reject) => {
+    resolve("This is the first promise");
+})
+const prmTwo = new Promise((resolve, reject) => {
+    resolve("This is the second promise");
+})
+const prmThree = new Promise((resolve, reject) => {
+    reject("This is the first reject");
+})
+const prmFour = new Promise((resolve, reject) => {
+    resolve("This is the third promise");
+})
+Promise.all([
+    prmOne.then((p1) => {
+        console.log("Promise1 success - ",p1);
+    }).catch((p1Err) => console.log("Promise1 error - ",p1Err)),
+    prmTwo.then((p2) => {
+        console.log("Promise2 success - ",p2);
+    }).catch((p2Err) => console.log("Promise2 error - ",p2Err)),
+    prmThree.then((p3) => {
+        console.log("Promise3 success - ",p3);
+    }).catch((p3Err) => console.log("Promise3 error - ",p3Err)),
+    prmFour.then((p4) => {
+        console.log("Promise4 success - ",p4);
+    }).catch((p4Err) => console.log("Promise4 error - ",p4Err)),
+    ]).then((res) => {
+    console.log("Handling all promise success scenario at one shot"); 
+}).catch((err) => {
+    console.log("Handling all errors. If there is one promise failing then everything fails");
+});
